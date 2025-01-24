@@ -77,6 +77,7 @@ class HomePage extends StatelessWidget {
                       PrimaryNavigation.pushFromRight(
                         context,
                         page: DetailPengaduanPage(
+                          isAdmin: true,
                           complaint: complaint,
                         ),
                       );

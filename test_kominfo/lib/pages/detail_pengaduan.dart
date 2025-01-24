@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:test_kominfo/widgets/bottom_sheet/cancel_reason_sheet.dart';
+import 'package:test_kominfo/widgets/bottom_sheet/response_sheet.dart';
+import 'package:test_kominfo/widgets/button/primary_button.dart';
+import 'package:test_kominfo/widgets/button/secondary_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPengaduanPage extends StatelessWidget {
   final Map<String, dynamic>? complaint;
 
-  const DetailPengaduanPage({super.key, this.complaint});
+  final bool? isAdmin;
+
+  const DetailPengaduanPage({super.key, this.complaint, this.isAdmin});
 
   Color _getStatusColor(String status) {
     switch (status) {
@@ -77,6 +83,65 @@ class DetailPengaduanPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Pengaduan'),
+        actions: [
+          Visibility(
+            visible: isAdmin == false,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: PrimaryButton(
+                label: 'Tutup',
+                onTap: () async {},
+                isMedium: true,
+              ),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Visibility(
+        visible: isAdmin == true,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            children: [
+              SecondaryButton(
+                label: 'Tolak',
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => const CancelReasonBottomSheet(),
+                  ).then((reason) {
+                    if (reason != null) {
+                      // Handle the submitted reason
+                      print('Cancellation reason: $reason');
+                      // Add your logic here to process the cancellation
+                    }
+                  });
+                },
+                isMedium: true,
+              ),
+              const SizedBox(width: 12),
+              PrimaryButton(
+                label: 'Setuju',
+                onTap: () async {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => const ResponseBottomSheet(),
+                  ).then((reason) {
+                    if (reason != null) {
+                      // Handle the submitted reason
+                      print('Response reason: $reason');
+                      // Add your logic here to process the cancellation
+                    }
+                  });
+                },
+                isMedium: true,
+              ),
+            ],
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
